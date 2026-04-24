@@ -7,7 +7,7 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; }
         header { background-color: #2c3e50; color: white; padding: 15px; text-align: center; }
-        .header-content { display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .header-content { display: flex; align-items: center; justify-content: center; gap: 50px; }
         .logo { width: 60px; height: 60px; background: white; padding: 5px; border-radius: 5px; }
         .navbar { background-color: #34495e; padding: 10px 0; }
         .navbar ul { list-style: none; display: flex; justify-content: center; margin: 0; padding: 0; }
@@ -146,12 +146,10 @@
 </div>
 
 <script type="module">
-    // 1. IMPORTACIÓN DE FIREBASE
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 2. CONFIGURACIÓN (Tu llave)
     const firebaseConfig = {
         apiKey: "AIzaSyCp_33aUfFDQUVUxviO23dAg_1RllAFDzA",
         authDomain: "alcald-c6151.firebaseapp.com",
@@ -165,7 +163,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- FUNCIONES DE UTILIDAD ---
     function normalizarEstado(e) {
         if (!e || typeof e !== 'string') return "pendiente"; 
         return e.toLowerCase().trim().replace(/\s+/g, "");
@@ -186,12 +183,10 @@
         }
     }
 
-    // Asignar eventos a los botones del menú
     document.getElementById("btn-inicio").onclick = () => mostrarVista('principal');
     document.getElementById("btn-tecnicos").onclick = () => mostrarVista('tecnicos');
     document.getElementById("btn-inventario").onclick = () => mostrarVista('inventario');
 
-    // --- GESTIÓN DE INCIDENCIAS ---
     document.getElementById("formIncidencia").addEventListener("submit", async function(e) {
         e.preventDefault();
         const nuevaIncidencia = {
@@ -257,8 +252,7 @@
             cargarTecnicos();
         }
     }
-
-    // --- GESTIÓN DE INVENTARIO ---
+    
     document.getElementById("formInventario").addEventListener("submit", async function(e) {
         e.preventDefault();
         const nuevoEquipo = {
