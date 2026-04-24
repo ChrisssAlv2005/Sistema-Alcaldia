@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Gestor de Incidencias e Inventario - Alcaldía de Zamora</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; }
+        header { background-color: #2c3e50; color: white; padding: 15px; text-align: center; }
+        .header-content { display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .logo { width: 60px; height: 60px; background: white; padding: 5px; border-radius: 5px; }
+        .navbar { background-color: #34495e; padding: 10px 0; }
+        .navbar ul { list-style: none; display: flex; justify-content: center; margin: 0; padding: 0; }
+        .navbar li { margin: 0 20px; }
+        .navbar a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; padding: 5px 10px; border-radius: 4px; }
+        .navbar a:hover { background-color: #3498db; }
+        .container { 
+            width: 95%; 
+            max-width: 1200px; 
+            margin: 20px auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            display: none; 
+        }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 5px; width: 100%; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background-color: #2980b9; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 13px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #3498db; color: white; }
+        .estado-pendiente { background-color: #e74c3c; color: white; border-radius: 4px; padding: 4px 8px; }
+        .estado-enproceso { background-color: #f1c40f; color: black; border-radius: 4px; padding: 4px 8px; }
+        .estado-solventado { background-color: #2ecc71; color: white; border-radius: 4px; padding: 4px 8px; }
+        .btn-resolver { background-color: #27ae60; color: white; padding: 5px; border: none; border-radius: 3px; cursor: pointer; width: auto; font-size: 11px; margin-right: 2px; }
+        .btn-eliminar { background-color: #c0392b; color: white; padding: 5px; border: none; border-radius: 3px; cursor: pointer; width: auto; font-size: 11px; }
+        .badge-funcional { background-color: #2ecc71; color: white; padding: 3px 8px; border-radius: 10px; font-size: 11px; }
+        .badge-nofuncional { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 10px; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <img src="https://alcaldiadezamora.com/wp-content/uploads/2022/06/LOGO-ZAMORA.svg" class="logo">
+        <div>
+            <h1>Sistema Gestor de Incidencias e Inventario</h1>
+            <p>Alcaldía del Municipio Zamora</p>
+        </div>
+    </div>
+</header>
+
+<nav class="navbar">
+    <ul>
+        <li><a id="btn-inicio">Inicio</a></li>
+        <li><a id="btn-tecnicos">Módulo Técnicos</a></li>
+        <li><a id="btn-inventario">Inventario</a></li>
+    </ul>
+</nav>
+
+<div class="container" id="vistaPrincipal" style="display: block;">
+    <h2>Registrar Incidencia</h2>
+    <form id="formIncidencia">
+        <div class="form-grid">
+            <input type="text" id="usuario" placeholder="Nombre del Usuario" required>
+            <input type="text" id="equipo" placeholder="Equipo / Serial" required>
+            <select id="categoria" required>
+                <option value="">Seleccione Categoría</option>
+                <option>Hardware</option>
+                <option>Software</option>
+                <option>Red</option>
+            </select>
+            <select id="prioridad" required>
+                <option value="">Seleccione Prioridad</option>
+                <option>Alta</option>
+                <option>Media</option>
+                <option>Baja</option>
+            </select>
+            <select id="estatus" required>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En proceso">En proceso</option>
+                <option value="Solventado">Solventado</option>
+            </select>
+        </div>
+        <textarea id="descripcion" placeholder="Descripción de la falla (Opcional)" rows="3" style="margin-bottom: 15px;"></textarea>
+        <button type="submit">Registrar Incidencia</button>
+    </form>
+</div>
+
+<div class="container" id="moduloTecnicos">
+    <h2>Módulo de Técnicos - Listado de Fallas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Equipo</th>
+                <th>Descripción</th>
+                <th>Estatus</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaTecnicos"></tbody>
+    </table>
+</div>
+
+<div class="container" id="moduloInventario">
+    <h2>Registrar Equipo en Inventario</h2>
+    <form id="formInventario">
+        <div class="form-grid">
+            <input type="text" id="inv_direccion" placeholder="Dirección / Departamento" required>
+            <input type="text" id="inv_codigo" placeholder="Cod. Inventario" required>
+            <input type="text" id="inv_tipo" placeholder="Tipo (PC, Monitor, etc.)" required>
+            <input type="text" id="inv_marca" placeholder="Marca" required>
+            <select id="inv_estado" required>
+                <option value="Funcional">Funcional</option>
+                <option value="No Funcional">No Funcional</option>
+            </select>
+            <input type="text" id="inv_windows" placeholder="Versión Windows">
+            <input type="text" id="inv_office" placeholder="Versión Office">
+            <input type="text" id="inv_otros" placeholder="Otros Detalles">
+        </div>
+        <button type="submit" style="background-color: #27ae60;">Agregar al Inventario</button>
+    </form>
+    <hr>
+    <h3>Listado de Equipos</h3>
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dirección</th>
+                    <th>Código</th>
+                    <th>Tipo</th>
+                    <th>Marca</th>
+                    <th>Estado</th>
+                    <th>Windows</th>
+                    <th>Office</th>
+                    <th>Otros</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tablaInventario"></tbody>
+        </table>
+    </div>
+</div>
+
+<script type="module">
+    // 1. IMPORTACIÓN DE FIREBASE
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy } 
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // 2. CONFIGURACIÓN (Tu llave)
+    const firebaseConfig = {
+        apiKey: "AIzaSyCp_33aUfFDQUVUxviO23dAg_1RllAFDzA",
+        authDomain: "alcald-c6151.firebaseapp.com",
+        projectId: "alcald-c6151",
+        storageBucket: "alcald-c6151.firebasestorage.app",
+        messagingSenderId: "357002429087",
+        appId: "1:357002429087:web:4ece2d9fb3d618cbd198aa",
+        measurementId: "G-54XX4HRNSH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // --- FUNCIONES DE UTILIDAD ---
+    function normalizarEstado(e) {
+        if (!e || typeof e !== 'string') return "pendiente"; 
+        return e.toLowerCase().trim().replace(/\s+/g, "");
+    }
+
+    window.mostrarVista = function(vista) {
+        const vistas = ["vistaPrincipal", "moduloTecnicos", "moduloInventario"];
+        vistas.forEach(v => document.getElementById(v).style.display = "none");
+        
+        if (vista === "tecnicos") {
+            document.getElementById("moduloTecnicos").style.display = "block";
+            cargarTecnicos();
+        } else if (vista === "inventario") {
+            document.getElementById("moduloInventario").style.display = "block";
+            cargarInventario();
+        } else {
+            document.getElementById("vistaPrincipal").style.display = "block";
+        }
+    }
+
+    // Asignar eventos a los botones del menú
+    document.getElementById("btn-inicio").onclick = () => mostrarVista('principal');
+    document.getElementById("btn-tecnicos").onclick = () => mostrarVista('tecnicos');
+    document.getElementById("btn-inventario").onclick = () => mostrarVista('inventario');
+
+    // --- GESTIÓN DE INCIDENCIAS ---
+    document.getElementById("formIncidencia").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const nuevaIncidencia = {
+            usuario: document.getElementById("usuario").value,
+            equipo: document.getElementById("equipo").value,
+            categoria: document.getElementById("categoria").value,
+            prioridad: document.getElementById("prioridad").value,
+            descripcion: document.getElementById("descripcion").value.trim() || "-",
+            estatus: document.getElementById("estatus").value || "Pendiente",
+            fecha: new Date()
+        };
+
+        try {
+            await addDoc(collection(db, "incidencias"), nuevaIncidencia);
+            alert("¡Incidencia guardada en la nube!");
+            this.reset();
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+
+    async function cargarTecnicos() {
+        const tbody = document.getElementById("tablaTecnicos");
+        tbody.innerHTML = "<tr><td colspan='5'>Cargando datos...</td></tr>";
+        
+        const q = query(collection(db, "incidencias"), orderBy("fecha", "desc"));
+        const querySnapshot = await getDocs(q);
+        tbody.innerHTML = "";
+
+        querySnapshot.forEach((documento) => {
+            const inc = documento.data();
+            const id = documento.id;
+            const statusLabel = inc.estatus || "Pendiente";
+            const claseColor = "estado-" + normalizarEstado(statusLabel);
+
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+                <td>${inc.usuario}</td>
+                <td>${inc.equipo}</td>
+                <td>${inc.descripcion}</td>
+                <td><span class="${claseColor}">${statusLabel}</span></td>
+                <td>
+                    <button class="btn-resolver">Resolver</button>
+                    <button class="btn-eliminar">Eliminar</button>
+                </td>
+            `;
+
+            fila.querySelector(".btn-resolver").onclick = () => resolverFalla(id);
+            fila.querySelector(".btn-eliminar").onclick = () => eliminarFalla(id);
+            tbody.appendChild(fila);
+        });
+    }
+
+    async function resolverFalla(id) {
+        const docRef = doc(db, "incidencias", id);
+        await updateDoc(docRef, { estatus: "Solventado" });
+        cargarTecnicos();
+    }
+
+    async function eliminarFalla(id) {
+        if(confirm("¿Eliminar reporte?")) {
+            await deleteDoc(doc(db, "incidencias", id));
+            cargarTecnicos();
+        }
+    }
+
+    // --- GESTIÓN DE INVENTARIO ---
+    document.getElementById("formInventario").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const nuevoEquipo = {
+            direccion: document.getElementById("inv_direccion").value,
+            codigo: document.getElementById("inv_codigo").value,
+            tipo: document.getElementById("inv_tipo").value,
+            marca: document.getElementById("inv_marca").value,
+            estado: document.getElementById("inv_estado").value,
+            windows: document.getElementById("inv_windows").value || "-",
+            office: document.getElementById("inv_office").value || "-",
+            otros: document.getElementById("inv_otros").value || "-",
+            fechaRegistro: new Date()
+        };
+
+        try {
+            await addDoc(collection(db, "inventario_equipos"), nuevoEquipo);
+            alert("Equipo agregado al inventario");
+            this.reset();
+            cargarInventario();
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+
+    async function cargarInventario() {
+        const tbody = document.getElementById("tablaInventario");
+        tbody.innerHTML = "<tr><td colspan='9'>Cargando inventario...</td></tr>";
+        
+        const querySnapshot = await getDocs(collection(db, "inventario_equipos"));
+        tbody.innerHTML = "";
+
+        querySnapshot.forEach((documento) => {
+            const eq = documento.data();
+            const id = documento.id;
+            const badge = eq.estado === "Funcional" ? "badge-funcional" : "badge-nofuncional";
+            
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+                <td>${eq.direccion}</td>
+                <td>${eq.codigo}</td>
+                <td>${eq.tipo}</td>
+                <td>${eq.marca}</td>
+                <td><span class="${badge}">${eq.estado}</span></td>
+                <td>${eq.windows}</td>
+                <td>${eq.office}</td>
+                <td>${eq.otros}</td>
+                <td><button class="btn-eliminar">X</button></td>
+            `;
+            fila.querySelector(".btn-eliminar").onclick = () => eliminarEquipo(id);
+            tbody.appendChild(fila);
+        });
+    }
+
+    async function eliminarEquipo(id) {
+        if(confirm("¿Eliminar del inventario?")) {
+            await deleteDoc(doc(db, "inventario_equipos", id));
+            cargarInventario();
+        }
+    }
+</script>
+</body>
+</html>
