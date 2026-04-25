@@ -122,8 +122,9 @@
             </div>
         </div>
         <div class="header-icons">
+ 
             <img src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders--v1.png" class="icon-ref" title="Notificaciones">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/inbox.png" class="icon-ref" title="Bandeja de entrada">
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/standard-general-linear-icon/inbox-23.png" class="icon-ref" title="Bandeja de entrada" style="filter: brightness(0) invert(1);">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/menu--v1.png" class="icon-ref" title="Menú">
         </div>
     </div>
@@ -182,7 +183,26 @@
 </div>
 
 <div class="container" id="moduloInventario">
-    <h2>Inventario de Equipos</h2>
+    <h2>Registro de Inventario</h2>
+    <form id="formInventario" style="margin-bottom: 40px;">
+        <div class="form-grid">
+            <input type="text" id="inv-direccion" placeholder="Dirección / Sede" required>
+            <input type="text" id="inv-codigo" placeholder="Código de Bien" required>
+            <input type="text" id="inv-tipo" placeholder="Tipo de Equipo" required>
+            <input type="text" id="inv-marca" placeholder="Marca" required>
+            <select id="inv-estado" required>
+                <option value="">Estado Físico</option>
+                <option>Funcional</option>
+                <option>Dañado</option>
+                <option>En Reparación</option>
+            </select>
+            <input type="text" id="inv-windows" placeholder="Windows (Versión/Estado)">
+            <input type="text" id="inv-office" placeholder="Office (Versión/Estado)">
+        </div>
+        <button type="submit" class="btn-registro">Guardar en Inventario</button>
+    </form>
+
+    <h2>Equipos en el Sistema</h2>
     <div style="overflow-x:auto;">
         <table>
             <thead>
@@ -204,7 +224,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy } 
+    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy, serverTimestamp } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -238,6 +258,37 @@
     document.getElementById("btn-inicio").onclick = function() { mostrarVista('principal'); };
     document.getElementById("btn-tecnicos").onclick = function() { mostrarVista('tecnicos'); };
     document.getElementById("btn-inventario").onclick = function() { mostrarVista('inventario'); };
+
+    document.getElementById("formIncidencia").onsubmit = async (e) => {
+        e.preventDefault();
+        await addDoc(collection(db, "incidencias"), {
+            usuario: document.getElementById("usuario").value,
+            equipo: document.getElementById("equipo").value,
+            categoria: document.getElementById("categoria").value,
+            prioridad: document.getElementById("prioridad").value,
+            estatus: document.getElementById("estatus").value,
+            descripcion: document.getElementById("descripcion").value,
+            fecha: serverTimestamp()
+        });
+        alert("Incidencia registrada");
+        e.target.reset();
+    };
+
+    document.getElementById("formInventario").onsubmit = async (e) => {
+        e.preventDefault();
+        await addDoc(collection(db, "inventario_equipos"), {
+            direccion: document.getElementById("inv-direccion").value,
+            codigo: document.getElementById("inv-codigo").value,
+            tipo: document.getElementById("inv-tipo").value,
+            marca: document.getElementById("inv-marca").value,
+            estado: document.getElementById("inv-estado").value,
+            windows: document.getElementById("inv-windows").value || "-",
+            office: document.getElementById("inv-office").value || "-"
+        });
+        alert("Equipo registrado en inventario");
+        e.target.reset();
+        cargarInventario();
+    };
 
     async function cargarTecnicos() {
         let tbody = document.getElementById("tablaTecnicos");
@@ -293,7 +344,7 @@
             `;
             tbody.appendChild(fila);
             document.getElementById("inv-del-" + id).onclick = async function() {
-                if(confirm("¿Eliminar?")) {
+                if(confirm("¿Eliminar este registro del inventario?")) {
                     await deleteDoc(doc(db, "inventario_equipos", id));
                     cargarInventario();
                 }
