@@ -5,49 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Gestor de Incidencias - Alcaldía de Zamora</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; }
-        header { background-color: #2c3e50; color: white; padding: 15px; text-align: center; }
-        .header-content { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        .logo { width: 120px; height: 120px; background: white; padding: 15px; border-radius: 10px; }
-        .navbar { background-color: #34495e; padding: 10px 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f4f8; margin: 0; color: #333; }
+        
+        header { 
+            background: linear-gradient(135deg, #1e62d0 0%, #16499a 100%); 
+            color: white; 
+            padding: 20px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 25px; 
+            max-width: 1200px; 
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            background-color: white;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            width: 80px;
+            height: 80px;
+        }
+
+        .logo { width: 70px; height: auto; }
+
+        header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
+        header p { margin: 5px 0 0; opacity: 0.9; font-weight: 300; }
+
+        .navbar { background-color: #ffffff; padding: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .navbar ul { list-style: none; display: flex; justify-content: center; margin: 0; padding: 0; }
-        .navbar li { margin: 0 20px; }
-        .navbar a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; padding: 5px 10px; border-radius: 4px; }
-        .navbar a:hover { background-color: #3498db; }
+        .navbar a { 
+            color: #555; 
+            text-decoration: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            padding: 15px 25px; 
+            display: inline-block;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        .navbar a:hover { 
+            background-color: #f8f9fa; 
+            color: #1e62d0;
+            border-bottom: 3px solid #1e62d0;
+        }
+
         .container { 
             width: 95%; 
             max-width: 1200px; 
-            margin: 20px auto; 
+            margin: 30px auto; 
             background: white; 
-            padding: 20px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05); 
             display: none; 
         }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 5px; width: 100%; cursor: pointer; font-size: 16px; font-weight: bold; }
-        button:hover { background-color: #2980b9; }
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 13px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #3498db; color: white; }
-        .estado-pendiente { background-color: #e74c3c; color: white; border-radius: 4px; padding: 4px 8px; }
-        .estado-enproceso { background-color: #f1c40f; color: black; border-radius: 4px; padding: 4px 8px; }
-        .estado-solventado { background-color: #2ecc71; color: white; border-radius: 4px; padding: 4px 8px; }
-        .btn-resolver { background-color: #27ae60; color: white; padding: 5px; border: none; border-radius: 3px; cursor: pointer; width: auto; font-size: 11px; margin-right: 2px; }
-        .btn-eliminar { background-color: #c0392b; color: white; padding: 5px; border: none; border-radius: 3px; cursor: pointer; width: auto; font-size: 11px; }
-        .badge-funcional { background-color: #2ecc71; color: white; padding: 3px 8px; border-radius: 10px; font-size: 11px; }
-        .badge-nofuncional { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 10px; font-size: 11px; }
+
+        h2 { color: #16499a; border-left: 5px solid #1e62d0; padding-left: 15px; margin-bottom: 25px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        
+        .btn-registro { 
+            padding: 12px; 
+            background-color: #1e62d0; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            width: 100%; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold; 
+            transition: background 0.3s;
+        }
+        .btn-registro:hover { background-color: #16499a; }
+
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 13px; border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: center; }
+        th { background-color: #1e62d0; color: white; text-transform: uppercase; font-size: 12px; }
+        tr:nth-child(even) { background-color: #fafafa; }
+
+        .estado-pendiente { background-color: #ff4757; color: white; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: bold; }
+        .estado-solventado { background-color: #2ed573; color: white; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: bold; }
+        
+        .btn-resolver { background-color: #27ae60; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 5px; }
+        .btn-eliminar { background-color: #c0392b; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; }
+
+        .badge-funcional { background-color: #2ed573; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .badge-nofuncional { background-color: #ff4757; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+
     </style>
 </head>
 <body>
 
 <header>
     <div class="header-content">
-        <img src="https://alcaldiadezamora.com/wp-content/uploads/2022/06/LOGO-ZAMORA.svg" class="logo">
+        <div class="logo-container">
+            <img src="https://alcaldiadezamora.com/wp-content/uploads/2022/06/LOGO-ZAMORA.svg" class="logo">
+        </div>
         <div>
             <h1>Sistema Gestor de Incidencias</h1>
-            <p>Alcaldía del Municipio Zamora</p>
+            <p>Alcaldía del Municipio Zamora • Gestión Tecnológica</p>
         </div>
     </div>
 </header>
@@ -56,12 +122,12 @@
     <ul>
         <li><a id="btn-inicio">Registrar Incidencia</a></li>
         <li><a id="btn-tecnicos">Módulo Técnico</a></li>
-        <li><a id="btn-inventario">Inventario</a></li>
+        <li><a id="btn-inventario">Inventario de Equipos</a></li>
     </ul>
 </nav>
 
 <div class="container" id="vistaPrincipal" style="display: block;">
-    <h2>Registrar Incidencia</h2>
+    <h2>Nueva Incidencia</h2>
     <form id="formIncidencia">
         <div class="form-grid">
             <input type="text" id="usuario" placeholder="Dirección / Departamento" required>
@@ -80,21 +146,20 @@
             </select>
             <select id="estatus" required>
                 <option value="Pendiente">Pendiente</option>
-                <option value="En proceso">En proceso</option>
                 <option value="Solventado">Solventado</option>
             </select>
         </div>
         <textarea id="descripcion" placeholder="Descripción de la falla (Opcional)" rows="3" style="margin-bottom: 15px;"></textarea>
-        <button type="submit">Registrar Incidencia</button>
+        <button type="submit" class="btn-registro">Registrar Incidencia</button>
     </form>
 </div>
 
 <div class="container" id="moduloTecnicos">
-    <h2>Módulo de Técnicos - Listado de Fallas</h2>
+    <h2>Listado de Fallas Reportadas</h2>
     <table>
         <thead>
             <tr>
-                <th>Usuario</th>
+                <th>Dirección</th>
                 <th>Equipo</th>
                 <th>Descripción</th>
                 <th>Estatus</th>
@@ -106,7 +171,7 @@
 </div>
 
 <div class="container" id="moduloInventario">
-    <h2>Registrar Equipo en Inventario</h2>
+    <h2>Registro de Inventario</h2>
     <form id="formInventario">
         <div class="form-grid">
             <input type="text" id="inv_direccion" placeholder="Dirección / Departamento" required>
@@ -121,10 +186,10 @@
             <input type="text" id="inv_office" placeholder="Versión Office">
             <input type="text" id="inv_otros" placeholder="Otros Detalles">
         </div>
-        <button type="submit" style="background-color: #27ae60;">Agregar al Inventario</button>
+        <button type="submit" style="background-color: #2ed573; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold;">Guardar en Inventario</button>
     </form>
-    <hr>
-    <h3>Listado de Equipos</h3>
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+    <h3>Equipos Registrados</h3>
     <div style="overflow-x:auto;">
         <table>
             <thead>
@@ -163,14 +228,10 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    function normalizarEstado(e) {
-        if (!e || typeof e !== 'string') return "pendiente"; 
-        return e.toLowerCase().trim().replace(/\s+/g, "");
-    }
-
     window.mostrarVista = function(vista) {
-        const vistas = ["vistaPrincipal", "moduloTecnicos", "moduloInventario"];
-        vistas.forEach(v => document.getElementById(v).style.display = "none");
+        document.getElementById("vistaPrincipal").style.display = "none";
+        document.getElementById("moduloTecnicos").style.display = "none";
+        document.getElementById("moduloInventario").style.display = "none";
         
         if (vista === "tecnicos") {
             document.getElementById("moduloTecnicos").style.display = "block";
@@ -183,79 +244,63 @@
         }
     }
 
-    document.getElementById("btn-inicio").onclick = () => mostrarVista('principal');
-    document.getElementById("btn-tecnicos").onclick = () => mostrarVista('tecnicos');
-    document.getElementById("btn-inventario").onclick = () => mostrarVista('inventario');
+    document.getElementById("btn-inicio").onclick = function() { mostrarVista('principal'); };
+    document.getElementById("btn-tecnicos").onclick = function() { mostrarVista('tecnicos'); };
+    document.getElementById("btn-inventario").onclick = function() { mostrarVista('inventario'); };
 
     document.getElementById("formIncidencia").addEventListener("submit", async function(e) {
         e.preventDefault();
-        const nuevaIncidencia = {
+        let nuevaIncidencia = {
             usuario: document.getElementById("usuario").value,
             equipo: document.getElementById("equipo").value,
             categoria: document.getElementById("categoria").value,
             prioridad: document.getElementById("prioridad").value,
-            descripcion: document.getElementById("descripcion").value.trim() || "-",
-            estatus: document.getElementById("estatus").value || "Pendiente",
+            descripcion: document.getElementById("descripcion").value || "-",
+            estatus: document.getElementById("estatus").value,
             fecha: new Date()
         };
-
-        try {
-            await addDoc(collection(db, "incidencias"), nuevaIncidencia);
-            alert("¡Incidencia guardada en la nube!");
-            this.reset();
-        } catch (error) {
-            console.error("Error:", error);
-        }
+        await addDoc(collection(db, "incidencias"), nuevaIncidencia);
+        alert("¡Incidencia guardada!");
+        document.getElementById("formIncidencia").reset();
     });
 
     async function cargarTecnicos() {
-        const tbody = document.getElementById("tablaTecnicos");
-        tbody.innerHTML = "<tr><td colspan='5'>Cargando datos...</td></tr>";
-        
-        const q = query(collection(db, "incidencias"), orderBy("fecha", "desc"));
-        const querySnapshot = await getDocs(q);
+        let tbody = document.getElementById("tablaTecnicos");
         tbody.innerHTML = "";
-
-        querySnapshot.forEach((documento) => {
-            const inc = documento.data();
-            const id = documento.id;
-            const statusLabel = inc.estatus || "Pendiente";
-            const claseColor = "estado-" + normalizarEstado(statusLabel);
-
-            const fila = document.createElement("tr");
+        let consulta = query(collection(db, "incidencias"), orderBy("fecha", "desc"));
+        let resultado = await getDocs(consulta);
+        resultado.forEach((documento) => {
+            let datos = documento.data();
+            let id = documento.id;
+            let colorClase = datos.estatus === "Solventado" ? "estado-solventado" : "estado-pendiente";
+            let fila = document.createElement("tr");
             fila.innerHTML = `
-                <td>${inc.usuario}</td>
-                <td>${inc.equipo}</td>
-                <td>${inc.descripcion}</td>
-                <td><span class="${claseColor}">${statusLabel}</span></td>
+                <td>${datos.usuario}</td>
+                <td>${datos.equipo}</td>
+                <td>${datos.descripcion}</td>
+                <td><span class="${colorClase}">${datos.estatus}</span></td>
                 <td>
-                    <button class="btn-resolver">Resolver</button>
-                    <button class="btn-eliminar">Eliminar</button>
+                    <button id="res-${id}" class="btn-resolver">Resolver</button>
+                    <button id="del-${id}" class="btn-eliminar">Eliminar</button>
                 </td>
             `;
-
-            fila.querySelector(".btn-resolver").onclick = () => resolverFalla(id);
-            fila.querySelector(".btn-eliminar").onclick = () => eliminarFalla(id);
             tbody.appendChild(fila);
+            document.getElementById("res-" + id).onclick = async function() {
+                await updateDoc(doc(db, "incidencias", id), { estatus: "Solventado" });
+                cargarTecnicos();
+            };
+            document.getElementById("del-" + id).onclick = async function() {
+                if(confirm("¿Eliminar reporte?")) {
+                    await deleteDoc(doc(db, "incidencias", id));
+                    cargarTecnicos();
+                }
+            };
         });
     }
 
-    async function resolverFalla(id) {
-        const docRef = doc(db, "incidencias", id);
-        await updateDoc(docRef, { estatus: "Solventado" });
-        cargarTecnicos();
-    }
-
-    async function eliminarFalla(id) {
-        if(confirm("¿Eliminar reporte?")) {
-            await deleteDoc(doc(db, "incidencias", id));
-            cargarTecnicos();
-        }
-    }
-    
     document.getElementById("formInventario").addEventListener("submit", async function(e) {
         e.preventDefault();
-        const nuevoEquipo = {
+        let nuevoEquipo = {
             direccion: document.getElementById("inv_direccion").value,
             codigo: document.getElementById("inv_codigo").value,
             tipo: document.getElementById("inv_tipo").value,
@@ -266,51 +311,40 @@
             otros: document.getElementById("inv_otros").value || "-",
             fechaRegistro: new Date()
         };
-
-        try {
-            await addDoc(collection(db, "inventario_equipos"), nuevoEquipo);
-            alert("Equipo agregado al inventario");
-            this.reset();
-            cargarInventario();
-        } catch (error) {
-            console.error("Error:", error);
-        }
+        await addDoc(collection(db, "inventario_equipos"), nuevoEquipo);
+        alert("Equipo agregado");
+        document.getElementById("formInventario").reset();
+        cargarInventario();
     });
 
     async function cargarInventario() {
-        const tbody = document.getElementById("tablaInventario");
-        tbody.innerHTML = "<tr><td colspan='9'>Cargando inventario...</td></tr>";
-        
-        const querySnapshot = await getDocs(collection(db, "inventario_equipos"));
+        let tbody = document.getElementById("tablaInventario");
         tbody.innerHTML = "";
-
-        querySnapshot.forEach((documento) => {
-            const eq = documento.data();
-            const id = documento.id;
-            const badge = eq.estado === "Funcional" ? "badge-funcional" : "badge-nofuncional";
-            
-            const fila = document.createElement("tr");
+        let resultado = await getDocs(collection(db, "inventario_equipos"));
+        resultado.forEach((documento) => {
+            let eq = documento.data();
+            let id = documento.id;
+            let claseBadge = eq.estado === "No Funcional" ? "badge-nofuncional" : "badge-funcional";
+            let fila = document.createElement("tr");
             fila.innerHTML = `
                 <td>${eq.direccion}</td>
                 <td>${eq.codigo}</td>
                 <td>${eq.tipo}</td>
                 <td>${eq.marca}</td>
-                <td><span class="${badge}">${eq.estado}</span></td>
+                <td><span class="${claseBadge}">${eq.estado}</span></td>
                 <td>${eq.windows}</td>
                 <td>${eq.office}</td>
                 <td>${eq.otros}</td>
-                <td><button class="btn-eliminar">X</button></td>
+                <td><button id="inv-del-${id}" class="btn-eliminar">X</button></td>
             `;
-            fila.querySelector(".btn-eliminar").onclick = () => eliminarEquipo(id);
             tbody.appendChild(fila);
+            document.getElementById("inv-del-" + id).onclick = async function() {
+                if(confirm("¿Eliminar?")) {
+                    await deleteDoc(doc(db, "inventario_equipos", id));
+                    cargarInventario();
+                }
+            };
         });
-    }
-
-    async function eliminarEquipo(id) {
-        if(confirm("¿Eliminar del inventario?")) {
-            await deleteDoc(doc(db, "inventario_equipos", id));
-            cargarInventario();
-        }
     }
 </script>
 </body>
