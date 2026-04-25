@@ -17,20 +17,10 @@
         .header-content { 
             display: flex; 
             align-items: center; 
-            justify-content: space-between; 
+            justify-content: center; 
+            gap: 25px; 
             max-width: 1200px; 
             margin: 0 auto;
-        }
-
-        .header-left { display: flex; align-items: center; gap: 25px; }
-
-        .header-icons { display: flex; gap: 15px; align-items: center; }
-        
-        .icon-ref { 
-            width: 28px; 
-            height: 28px; 
-            filter: brightness(0) invert(1); 
-            opacity: 0.9;
         }
 
         .logo-container {
@@ -118,19 +108,12 @@
 
 <header>
     <div class="header-content">
-        <div class="header-left">
-            <div class="logo-container">
-                <img src="https://alcaldiadezamora.com/wp-content/uploads/2022/06/LOGO-ZAMORA.svg" class="logo">
-            </div>
-            <div>
-                <h1>Sistema Gestor de Incidencias</h1>
-                <p>Alcaldía del Municipio Zamora • Gestión Tecnológica</p>
-            </div>
+        <div class="logo-container">
+            <img src="https://alcaldiadezamora.com/wp-content/uploads/2022/06/LOGO-ZAMORA.svg" class="logo">
         </div>
-        <div class="header-icons">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders--v1.png" class="icon-ref" title="Notificaciones">
-            <img src="https://icons.veryicon.com/png/o/miscellaneous/standard-general-linear-icon/inbox-23.png" class="icon-ref" title="Bandeja de entrada">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/menu--v1.png" class="icon-ref" title="Menú">
+        <div>
+            <h1>Sistema Gestor de Incidencias</h1>
+            <p>Alcaldía del Municipio Zamora • Gestión Tecnológica</p>
         </div>
     </div>
 </header>
@@ -176,7 +159,7 @@
     <table>
         <thead>
             <tr>
-                <th>Usuario</th>
+                <th>Dirección</th>
                 <th>Equipo</th>
                 <th>Descripción</th>
                 <th>Estatus</th>
