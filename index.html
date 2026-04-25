@@ -25,7 +25,13 @@
         .header-left { display: flex; align-items: center; gap: 25px; }
 
         .header-icons { display: flex; gap: 15px; align-items: center; }
-        .icon-ref { width: 30px; height: 30px; object-fit: contain; cursor: default; }
+        
+        .icon-ref { 
+            width: 28px; 
+            height: 28px; 
+            filter: brightness(0) invert(1); 
+            opacity: 0.9;
+        }
 
         .logo-container {
             background-color: white;
@@ -41,8 +47,8 @@
 
         .logo { width: 70px; height: auto; }
 
-        header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
-        header p { margin: 5px 0 0; opacity: 0.9; font-weight: 300; }
+        header h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
+        header p { margin: 5px 0 0; opacity: 0.9; font-size: 14px; }
 
         .navbar { background-color: #ffffff; padding: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .navbar ul { list-style: none; display: flex; justify-content: center; margin: 0; padding: 0; }
@@ -90,9 +96,9 @@
             font-weight: bold; 
         }
 
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 13px; border-radius: 8px; overflow: hidden; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 13px; }
         th, td { border: 1px solid #eee; padding: 12px; text-align: center; }
-        th { background-color: #1e62d0; color: white; text-transform: uppercase; font-size: 12px; }
+        th { background-color: #1e62d0; color: white; }
 
         .estado-pendiente { background-color: #ff4757; color: white; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: bold; }
         .estado-solventado { background-color: #2ed573; color: white; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: bold; }
@@ -116,9 +122,9 @@
             </div>
         </div>
         <div class="header-icons">
-            <img src="images.png" class="icon-ref" title="Menú">
-            <img src="campana-notificacion-azul-notificacion_78370-6899.jpg" class="icon-ref" title="Notificaciones">
-            <img src="inbox-mail-messages-png.png" class="icon-ref" title="Bandeja de entrada">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/menu--v1.png" class="icon-ref">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders--v1.png" class="icon-ref">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/envelope-closed-subset.png" class="icon-ref">
         </div>
     </div>
 </header>
@@ -176,25 +182,7 @@
 </div>
 
 <div class="container" id="moduloInventario">
-    <h2>Registro de Inventario</h2>
-    <form id="formInventario">
-        <div class="form-grid">
-            <input type="text" id="inv_direccion" placeholder="Dirección / Departamento" required>
-            <input type="text" id="inv_codigo" placeholder="Cod. Inventario" required>
-            <input type="text" id="inv_tipo" placeholder="Tipo (PC, Monitor, etc.)" required>
-            <input type="text" id="inv_marca" placeholder="Marca" required>
-            <select id="inv_estado" required>
-                <option value="Funcional">Funcional</option>
-                <option value="No Funcional">No Funcional</option>
-            </select>
-            <input type="text" id="inv_windows" placeholder="Versión Windows">
-            <input type="text" id="inv_office" placeholder="Versión Office">
-            <input type="text" id="inv_otros" placeholder="Otros Detalles">
-        </div>
-        <button type="submit" style="background-color: #2ed573; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold;">Guardar en Inventario</button>
-    </form>
-    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
-    <h3>Equipos Registrados</h3>
+    <h2>Inventario de Equipos</h2>
     <div style="overflow-x:auto;">
         <table>
             <thead>
@@ -206,7 +194,6 @@
                     <th>Estado</th>
                     <th>Windows</th>
                     <th>Office</th>
-                    <th>Otros</th>
                     <th>Acción</th>
                 </tr>
             </thead>
@@ -252,22 +239,6 @@
     document.getElementById("btn-tecnicos").onclick = function() { mostrarVista('tecnicos'); };
     document.getElementById("btn-inventario").onclick = function() { mostrarVista('inventario'); };
 
-    document.getElementById("formIncidencia").addEventListener("submit", async function(e) {
-        e.preventDefault();
-        let nuevaIncidencia = {
-            usuario: document.getElementById("usuario").value,
-            equipo: document.getElementById("equipo").value,
-            categoria: document.getElementById("categoria").value,
-            prioridad: document.getElementById("prioridad").value,
-            descripcion: document.getElementById("descripcion").value || "-",
-            estatus: document.getElementById("estatus").value,
-            fecha: new Date()
-        };
-        await addDoc(collection(db, "incidencias"), nuevaIncidencia);
-        alert("¡Incidencia guardada!");
-        document.getElementById("formIncidencia").reset();
-    });
-
     async function cargarTecnicos() {
         let tbody = document.getElementById("tablaTecnicos");
         tbody.innerHTML = "";
@@ -302,25 +273,6 @@
         });
     }
 
-    document.getElementById("formInventario").addEventListener("submit", async function(e) {
-        e.preventDefault();
-        let nuevoEquipo = {
-            direccion: document.getElementById("inv_direccion").value,
-            codigo: document.getElementById("inv_codigo").value,
-            tipo: document.getElementById("inv_tipo").value,
-            marca: document.getElementById("inv_marca").value,
-            estado: document.getElementById("inv_estado").value,
-            windows: document.getElementById("inv_windows").value || "-",
-            office: document.getElementById("inv_office").value || "-",
-            otros: document.getElementById("inv_otros").value || "-",
-            fechaRegistro: new Date()
-        };
-        await addDoc(collection(db, "inventario_equipos"), nuevoEquipo);
-        alert("Equipo agregado");
-        document.getElementById("formInventario").reset();
-        cargarInventario();
-    });
-
     async function cargarInventario() {
         let tbody = document.getElementById("tablaInventario");
         tbody.innerHTML = "";
@@ -337,7 +289,6 @@
                 <td>${eq.estado}</td>
                 <td>${eq.windows}</td>
                 <td>${eq.office}</td>
-                <td>${eq.otros}</td>
                 <td><button id="inv-del-${id}" class="btn-eliminar">X</button></td>
             `;
             tbody.appendChild(fila);
