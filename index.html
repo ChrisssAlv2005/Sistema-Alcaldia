@@ -47,8 +47,8 @@
 
         .logo { width: 70px; height: auto; }
 
-        header h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
-        header p { margin: 5px 0 0; opacity: 0.9; font-size: 14px; }
+        header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
+        header p { margin: 5px 0 0; opacity: 0.9; font-weight: 300; }
 
         .navbar { background-color: #ffffff; padding: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .navbar ul { list-style: none; display: flex; justify-content: center; margin: 0; padding: 0; }
@@ -94,17 +94,23 @@
             cursor: pointer; 
             font-size: 16px; 
             font-weight: bold; 
+            transition: background 0.3s;
         }
+        .btn-registro:hover { background-color: #16499a; }
 
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 13px; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 13px; border-radius: 8px; overflow: hidden; }
         th, td { border: 1px solid #eee; padding: 12px; text-align: center; }
-        th { background-color: #1e62d0; color: white; }
+        th { background-color: #1e62d0; color: white; text-transform: uppercase; font-size: 12px; }
+        tr:nth-child(even) { background-color: #fafafa; }
 
         .estado-pendiente { background-color: #ff4757; color: white; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: bold; }
         .estado-solventado { background-color: #2ed573; color: white; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: bold; }
         
         .btn-resolver { background-color: #27ae60; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 5px; }
         .btn-eliminar { background-color: #c0392b; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; }
+
+        .badge-funcional { background-color: #2ed573; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .badge-nofuncional { background-color: #ff4757; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
 
     </style>
 </head>
@@ -122,9 +128,8 @@
             </div>
         </div>
         <div class="header-icons">
- 
             <img src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders--v1.png" class="icon-ref" title="Notificaciones">
-            <img src="https://icons.veryicon.com/png/o/miscellaneous/standard-general-linear-icon/inbox-23.png" class="icon-ref" title="Bandeja de entrada" style="filter: brightness(0) invert(1);">
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/standard-general-linear-icon/inbox-23.png" class="icon-ref" title="Bandeja de entrada">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/menu--v1.png" class="icon-ref" title="Menú">
         </div>
     </div>
@@ -184,25 +189,24 @@
 
 <div class="container" id="moduloInventario">
     <h2>Registro de Inventario</h2>
-    <form id="formInventario" style="margin-bottom: 40px;">
+    <form id="formInventario">
         <div class="form-grid">
-            <input type="text" id="inv-direccion" placeholder="Dirección / Sede" required>
-            <input type="text" id="inv-codigo" placeholder="Código de Bien" required>
-            <input type="text" id="inv-tipo" placeholder="Tipo de Equipo" required>
-            <input type="text" id="inv-marca" placeholder="Marca" required>
-            <select id="inv-estado" required>
-                <option value="">Estado Físico</option>
-                <option>Funcional</option>
-                <option>Dañado</option>
-                <option>En Reparación</option>
+            <input type="text" id="inv_direccion" placeholder="Dirección / Departamento" required>
+            <input type="text" id="inv_codigo" placeholder="Cod. Inventario" required>
+            <input type="text" id="inv_tipo" placeholder="Tipo (PC, Monitor, etc.)" required>
+            <input type="text" id="inv_marca" placeholder="Marca" required>
+            <select id="inv_estado" required>
+                <option value="Funcional">Funcional</option>
+                <option value="No Funcional">No Funcional</option>
             </select>
-            <input type="text" id="inv-windows" placeholder="Windows (Versión/Estado)">
-            <input type="text" id="inv-office" placeholder="Office (Versión/Estado)">
+            <input type="text" id="inv_windows" placeholder="Versión Windows">
+            <input type="text" id="inv_office" placeholder="Versión Office">
+            <input type="text" id="inv_otros" placeholder="Otros Detalles">
         </div>
-        <button type="submit" class="btn-registro">Guardar en Inventario</button>
+        <button type="submit" style="background-color: #2ed573; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold;">Guardar en Inventario</button>
     </form>
-
-    <h2>Equipos en el Sistema</h2>
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+    <h3>Equipos Registrados</h3>
     <div style="overflow-x:auto;">
         <table>
             <thead>
@@ -214,6 +218,7 @@
                     <th>Estado</th>
                     <th>Windows</th>
                     <th>Office</th>
+                    <th>Otros</th>
                     <th>Acción</th>
                 </tr>
             </thead>
@@ -224,7 +229,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy, serverTimestamp } 
+    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -244,6 +249,7 @@
         document.getElementById("vistaPrincipal").style.display = "none";
         document.getElementById("moduloTecnicos").style.display = "none";
         document.getElementById("moduloInventario").style.display = "none";
+        
         if (vista === "tecnicos") {
             document.getElementById("moduloTecnicos").style.display = "block";
             cargarTecnicos();
@@ -259,36 +265,21 @@
     document.getElementById("btn-tecnicos").onclick = function() { mostrarVista('tecnicos'); };
     document.getElementById("btn-inventario").onclick = function() { mostrarVista('inventario'); };
 
-    document.getElementById("formIncidencia").onsubmit = async (e) => {
+    document.getElementById("formIncidencia").addEventListener("submit", async function(e) {
         e.preventDefault();
-        await addDoc(collection(db, "incidencias"), {
+        let nuevaIncidencia = {
             usuario: document.getElementById("usuario").value,
             equipo: document.getElementById("equipo").value,
             categoria: document.getElementById("categoria").value,
             prioridad: document.getElementById("prioridad").value,
+            descripcion: document.getElementById("descripcion").value || "-",
             estatus: document.getElementById("estatus").value,
-            descripcion: document.getElementById("descripcion").value,
-            fecha: serverTimestamp()
-        });
-        alert("Incidencia registrada");
-        e.target.reset();
-    };
-
-    document.getElementById("formInventario").onsubmit = async (e) => {
-        e.preventDefault();
-        await addDoc(collection(db, "inventario_equipos"), {
-            direccion: document.getElementById("inv-direccion").value,
-            codigo: document.getElementById("inv-codigo").value,
-            tipo: document.getElementById("inv-tipo").value,
-            marca: document.getElementById("inv-marca").value,
-            estado: document.getElementById("inv-estado").value,
-            windows: document.getElementById("inv-windows").value || "-",
-            office: document.getElementById("inv-office").value || "-"
-        });
-        alert("Equipo registrado en inventario");
-        e.target.reset();
-        cargarInventario();
-    };
+            fecha: new Date()
+        };
+        await addDoc(collection(db, "incidencias"), nuevaIncidencia);
+        alert("¡Incidencia guardada!");
+        document.getElementById("formIncidencia").reset();
+    });
 
     async function cargarTecnicos() {
         let tbody = document.getElementById("tablaTecnicos");
@@ -324,6 +315,25 @@
         });
     }
 
+    document.getElementById("formInventario").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        let nuevoEquipo = {
+            direccion: document.getElementById("inv_direccion").value,
+            codigo: document.getElementById("inv_codigo").value,
+            tipo: document.getElementById("inv_tipo").value,
+            marca: document.getElementById("inv_marca").value,
+            estado: document.getElementById("inv_estado").value,
+            windows: document.getElementById("inv_windows").value || "-",
+            office: document.getElementById("inv_office").value || "-",
+            otros: document.getElementById("inv_otros").value || "-",
+            fechaRegistro: new Date()
+        };
+        await addDoc(collection(db, "inventario_equipos"), nuevoEquipo);
+        alert("Equipo agregado");
+        document.getElementById("formInventario").reset();
+        cargarInventario();
+    });
+
     async function cargarInventario() {
         let tbody = document.getElementById("tablaInventario");
         tbody.innerHTML = "";
@@ -331,20 +341,22 @@
         resultado.forEach((documento) => {
             let eq = documento.data();
             let id = documento.id;
+            let claseBadge = eq.estado === "No Funcional" ? "badge-nofuncional" : "badge-funcional";
             let fila = document.createElement("tr");
             fila.innerHTML = `
                 <td>${eq.direccion}</td>
                 <td>${eq.codigo}</td>
                 <td>${eq.tipo}</td>
                 <td>${eq.marca}</td>
-                <td>${eq.estado}</td>
+                <td><span class="${claseBadge}">${eq.estado}</span></td>
                 <td>${eq.windows}</td>
                 <td>${eq.office}</td>
+                <td>${eq.otros}</td>
                 <td><button id="inv-del-${id}" class="btn-eliminar">X</button></td>
             `;
             tbody.appendChild(fila);
             document.getElementById("inv-del-" + id).onclick = async function() {
-                if(confirm("¿Eliminar este registro del inventario?")) {
+                if(confirm("¿Eliminar?")) {
                     await deleteDoc(doc(db, "inventario_equipos", id));
                     cargarInventario();
                 }
